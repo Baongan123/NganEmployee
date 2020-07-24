@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeManage.BAL.Interface\EmployeeManage.BAL.Interface.csproj" />
+    <ProjectReference Include="..\EmployeeManage.BAL\EmployeeManage.BAL.csproj" />
+    <ProjectReference Include="..\EmployeeManage.DAL.Interface\EmployeeManage.DAL.Interface.csproj" />
+    <ProjectReference Include="..\EmployeeManage.DAL\EmployeeManage.DAL.csproj" />
+    <ProjectReference Include="..\EmployeeManage.Domain\EmployeeManage.Domain.csproj" />
+  </ItemGroup>
+
+
+</Project>

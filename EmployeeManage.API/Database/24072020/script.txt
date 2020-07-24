@@ -1,0 +1,338 @@
+﻿
+/****** Object:  StoredProcedure [dbo].[sp_GetDepartments]    Script Date: 7/24/2020 11:31:02 AM ******/
+DROP PROCEDURE [dbo].[sp_GetDepartments]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetDepartment]    Script Date: 7/24/2020 11:31:02 AM ******/
+DROP PROCEDURE [dbo].[sp_GetDepartment]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetDepartment]    Script Date: 7/24/2020 11:31:02 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/14/2020
+-- Description:	Get department by departmentID
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_GetDepartment]
+	@DepartmentId INT
+AS
+BEGIN
+
+	SELECT [DepartmentId]
+      ,[DepartmentName]
+  FROM [dbo].[Department]
+  WHERE DepartmentId = @DepartmentId
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetDepartments]    Script Date: 7/24/2020 11:31:02 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/14/2020
+-- Description:	Get all department
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_GetDepartments]
+AS
+BEGIN
+
+	SELECT d.[DepartmentId]
+      ,d.[DepartmentName]
+	  ,(SELECT COUNT(*) FROM Employee e WHERE e.DepartmentId = d.DepartmentId) AS Employees
+  FROM [dbo].[Department] d
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_SaveEmployee]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_SaveEmployee]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_SaveDepartment]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_SaveDepartment]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetEmployeesByDepartId]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_GetEmployeesByDepartId]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetEmployeeById]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_GetEmployeeById]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_DeleteEmployee]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_DeleteEmployee]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_DeleteDepartment]    Script Date: 7/24/2020 11:31:32 AM ******/
+DROP PROCEDURE [dbo].[sp_DeleteDepartment]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_DeleteDepartment]    Script Date: 7/24/2020 11:31:32 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/14/2020
+-- Description:	delete department by departmentID
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_DeleteDepartment]
+	@DepartmentId INT
+AS
+BEGIN
+	DECLARE @Message NVARCHAR(200) = 'Something went wrong, please try again'
+	BEGIN TRY
+		DELETE FROM [dbo].[Department]
+		WHERE DepartmentId = @DepartmentId
+
+		SET @Message = 'Department has been deleted successfully!'
+		SELECT @DepartmentId AS DepartmentId, @Message AS [Message]
+
+	END TRY
+	BEGIN CATCH
+		SELECT @DepartmentId AS DepartmentId, @Message AS [Message]
+	END CATCH
+	
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_DeleteEmployee]    Script Date: 7/24/2020 11:31:32 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Bùi Ngân
+-- Create date: 7/23/2020
+-- Description:	delete employee by employeeID
+-- =============================================
+Create PROCEDURE [dbo].[sp_DeleteEmployee]
+	@EmployeeId INT
+AS
+BEGIN
+	DECLARE @Message NVARCHAR(200) = 'Something went wrong, please try again'
+	BEGIN TRY
+		DELETE FROM [dbo].[Employee]
+		WHERE EmployeeId = @EmployeeId
+
+		SET @Message = 'Employee has been deleted successfully!'
+		SELECT @EmployeeId AS EmployeeId, @Message AS [Message]
+
+	END TRY
+	BEGIN CATCH
+		SELECT @EmployeeId AS EmployeeId, @Message AS [Message]
+	END CATCH
+	
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetEmployeeById]    Script Date: 7/24/2020 11:31:32 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Ngân Bùi
+-- Create date: 7/23/2020
+-- Description:	Get employee by EmployeeId
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_GetEmployeeById]
+	@EmployeeId INT
+AS
+BEGIN
+
+
+SELECT [EmployeeId]
+      ,[EmployeeName]
+      ,FORMAT([DoB], 'MMM dd yyyy') AS [DoB]
+      ,(CASE WHEN [Gender] = 1 THEN 'Male' ELSE 'Female' END) AS Gender
+      ,[DepartmentId]
+      ,[AvatarPath]
+	  ,FORMAT([CreatedDate], 'dd/MM/yyyy') AS [CreatedDate]
+  FROM [dbo].[Employee]
+  WHERE EmployeeId = @EmployeeId AND IsDeleted = 0
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_GetEmployeesByDepartId]    Script Date: 7/24/2020 11:31:32 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/22/2020
+-- Description:	Get employees by departmentId
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_GetEmployeesByDepartId]
+	@DepartmentId INT
+AS
+BEGIN
+
+
+SELECT [EmployeeId]
+      ,[EmployeeName]
+      ,FORMAT([DoB], 'MMM dd yyyy') AS [DoB]
+      ,(CASE WHEN [Gender] = 1 THEN 'Male' ELSE 'Female' END) AS Gender
+      ,[DepartmentId]
+      ,[AvatarPath]
+	  ,FORMAT([CreatedDate], 'dd/MM/yyyy') AS [CreatedDate]
+  FROM [dbo].[Employee]
+  WHERE DepartmentId = @DepartmentId AND IsDeleted = 0
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_SaveDepartment]    Script Date: 7/24/2020 11:31:32 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/14/2020
+-- Description:	create/update department
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_SaveDepartment]
+	@DepartmentId INT,
+	@DeparmentName NVARCHAR(50)
+AS
+BEGIN
+	DECLARE @Message NVARCHAR(200) = 'Something went wrong, please try again!'
+	BEGIN TRY
+		--Create new Department
+		IF(@DepartmentId IS NULL OR @DepartmentId = 0)
+		BEGIN
+			INSERT INTO [dbo].[Department]
+			   ([DepartmentName])
+			VALUES
+			   (@DeparmentName)
+		
+			SET @DepartmentId = SCOPE_IDENTITY()
+			SET @Message = 'Department has been created successfully!'
+
+		END
+		ELSE --Update Department by Id
+		BEGIN
+			UPDATE [dbo].[Department]
+			   SET [DepartmentName] = @DeparmentName
+			 WHERE DepartmentId = @DepartmentId
+			 SET @Message = 'Department has been updated successfully!'
+		END
+
+		SELECT @DepartmentId AS DepartmentId, @Message AS [Message]
+
+	END TRY
+	BEGIN CATCH
+		SET @DepartmentId = 0
+		SELECT @DepartmentId AS DepartmentId, @Message AS [Message]
+	END CATCH
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_SaveEmployee]    Script Date: 7/24/2020 11:31:33 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Khoa Nguyen
+-- Create date: 7/14/2020
+-- Description:	create/update employee
+-- =============================================
+CREATE PROCEDURE [dbo].[sp_SaveEmployee]
+	@EmployeeId INT,
+	@EmployeeName NVARCHAR(50),
+	@DoB DATETIME,
+	@Gender BIT,
+	@DepartmentId INT,
+	@AvatarPath NVARCHAR(200)
+AS
+BEGIN
+	DECLARE @Message NVARCHAR(200) = 'Something went wrong, please try again!'
+	BEGIN TRY
+		--Create new Employee
+		IF(@EmployeeId IS NULL OR @EmployeeId = 0)
+		BEGIN
+			INSERT INTO [dbo].[Employee]
+					   ([EmployeeName]
+					   ,[DoB]
+					   ,[Gender]
+					   ,[DepartmentId]
+					   ,[AvatarPath]
+					   ,[IsDeleted]
+					   ,[CreatedDate]
+					   ,[ModifiedDate])
+				 VALUES
+					   (@EmployeeName
+					   ,@DoB
+					   ,@Gender
+					   ,@DepartmentId
+					   ,@AvatarPath
+					   ,0
+					   ,GETDATE()
+					   ,GETDATE())
+
+			SET @EmployeeId = SCOPE_IDENTITY()
+			SET @Message = 'Employee has been created successfully!'
+
+		END
+		ELSE --Update Employee by Id
+		BEGIN
+			UPDATE [dbo].[Employee]
+			   SET [EmployeeName] = @EmployeeName
+				  ,[DoB] = @DoB
+				  ,[Gender] = @Gender
+				  ,[DepartmentId] = @DepartmentId
+				  ,[AvatarPath] = @AvatarPath			 
+				  ,[ModifiedDate] = GETDATE()
+			 WHERE [EmployeeId]=@EmployeeId
+			 SET @Message = 'Employee has been updated successfully!'
+		END
+
+		SELECT @EmployeeId AS [EmployeeId], @Message AS [Message]
+
+	END TRY
+	BEGIN CATCH
+		SET @EmployeeId = 0
+		SELECT @EmployeeId AS [EmployeeId], @Message AS [Message]
+	END CATCH
+END
+GO
+
